@@ -1,8 +1,17 @@
 import os
 
+import discord
 from discord.ext import commands
+from discord_slash import cog_ext, SlashCommand, SlashContext
 
 bot = commands.Bot(command_prefix="!")
+slash = SlashCommand(bot)
+
+
+@slash.slash(name="slashtest")
+async def _test(ctx: SlashContext):
+    embed = discord.Embed(title="embed test")
+    await ctx.send(content="test", embeds=[embed])
 
 
 @bot.command()
@@ -12,20 +21,6 @@ async def ping(ctx):
 
 bot.run(os.environ.get("DISCORD_BOT_TOKEN"))
 
-# import discord
-# from discord.ext import commands
-# from discord_slash import cog_ext, SlashCommand, SlashContext
-#
-# bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
-# slash = SlashCommand(bot)
-#
-#
-# @slash.slash(name="slashtest")
-# async def _test(ctx: SlashContext):
-#     embed = discord.Embed(title="embed test")
-#     await ctx.send(content="test", embeds=[embed])
-#
-#
 # class ServerCog(commands.Cog):
 #     def __init__(self, bot):
 #         if not hasattr(bot, "slash"):
@@ -40,5 +35,3 @@ bot.run(os.environ.get("DISCORD_BOT_TOKEN"))
 #
 #
 # bot.add_cog(ServerCog(bot))
-# bot_token = os.environ.get("DISCORD_BOT_TOKEN")
-# bot.run(bot_token)
