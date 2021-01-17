@@ -1,2 +1,4 @@
-# qwapp-discord-bot
-Discord bot (python)
+# qwapp bot
+> Discord bot for qwapp
+
+meh
