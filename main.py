@@ -1,34 +1,42 @@
 import os
 
-import discord
 from discord.ext import commands
 
 bot = commands.Bot(command_prefix="!")
 
-
-class Greetings(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
-        self._last_member = None
-
-    @commands.Cog.listener()
-    async def on_member_join(self, member):
-        channel = member.guild.system_channel
-        if channel is not None:
-            await channel.send("Welcome {0.mention}.".format(member))
-
-    @commands.command()
-    async def hello(self, ctx, *, member: discord.Member = None):
-        """Says hello"""
-        member = member or ctx.author
-        if self._last_member is None or self._last_member.id != member.id:
-            await ctx.send("Hello {0.name}~".format(member))
-        else:
-            await ctx.send("Hello {0.name}... This feels familiar.".format(member))
-        self._last_member = member
+commands.command()
 
 
-bot.add_cog(Greetings)
+@bot.event
+async def on_ready():
+    print("Logged in as")
+    print(bot.user.name)
+    print(bot.user.id)
+    print("Bot Online!")
+
+
+@bot.group()
+async def servers(ctx):
+    if ctx.invoked_subcommand is None:
+        await ctx.send("Invalid server command passed...")
+
+
+@servers.command(help="List servers")
+async def list(ctx) -> None:
+    msg = "[list servers]"
+    await ctx.send(msg)
+
+
+@servers.command(help="Start server")
+async def start(ctx, aws_region: str) -> None:
+    msg = f"[start server in {aws_region}]"
+    await ctx.send(msg)
+
+
+@servers.command(help="Stop server")
+async def stop(ctx, server_id: str) -> None:
+    msg = f"[stop server by id {server_id}]"
+    await ctx.send(msg)
 
 
 @bot.command()
@@ -37,18 +45,3 @@ async def ping(ctx):
 
 
 bot.run(os.environ.get("DISCORD_BOT_TOKEN"))
-
-# class ServerCog(commands.Cog):
-#     def __init__(self, bot):
-#         if not hasattr(bot, "slash"):
-#             # Creates new SlashCommand instance to bot if bot doesn't have.
-#             bot.slash = SlashCommand(bot, override_type=True)
-#         self.bot = bot
-#
-#     @cog_ext.cog_slash(name="cogtest")
-#     async def _test(self, ctx: SlashContext):
-#         embed = discord.Embed(title="embed test")
-#         await ctx.send(content="test", embeds=[embed])
-#
-#
-# bot.add_cog(ServerCog(bot))
