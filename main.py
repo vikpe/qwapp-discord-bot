@@ -28,7 +28,5 @@ class ServerCog(commands.Cog):
 
 
 bot.add_cog(ServerCog(bot))
-
-if __name__ == "main":
-    bot_token = os.environ.get("DISCORD_BOT_TOKEN")
-    bot.run(bot_token)
+bot_token = os.environ.get("DISCORD_BOT_TOKEN")
+bot.run(bot_token)
