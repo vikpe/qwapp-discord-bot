@@ -2,16 +2,33 @@ import os
 
 import discord
 from discord.ext import commands
-from discord_slash import cog_ext, SlashCommand, SlashContext
 
-bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
-slash = SlashCommand(bot)
+bot = commands.Bot(command_prefix="!")
 
 
-@slash.slash(name="slashtest")
-async def _test(ctx: SlashContext):
-    embed = discord.Embed(title="embed test")
-    await ctx.send(content="test", embeds=[embed])
+class Greetings(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self._last_member = None
+
+    @commands.Cog.listener()
+    async def on_member_join(self, member):
+        channel = member.guild.system_channel
+        if channel is not None:
+            await channel.send("Welcome {0.mention}.".format(member))
+
+    @commands.command()
+    async def hello(self, ctx, *, member: discord.Member = None):
+        """Says hello"""
+        member = member or ctx.author
+        if self._last_member is None or self._last_member.id != member.id:
+            await ctx.send("Hello {0.name}~".format(member))
+        else:
+            await ctx.send("Hello {0.name}... This feels familiar.".format(member))
+        self._last_member = member
+
+
+bot.add_cog(Greetings)
 
 
 @bot.command()
