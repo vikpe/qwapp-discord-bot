@@ -9,10 +9,7 @@ commands.command()
 
 @bot.event
 async def on_ready():
-    print("Logged in as")
-    print(bot.user.name)
-    print(bot.user.id)
-    print("Bot Online!")
+    print(f"Logged in as {bot.user.name} ({bot.user.id})")
 
 
 @bot.group()
